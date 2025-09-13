@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EduPath – Student Guidance Portal</title>
+  <style>
+    /* ====== CSS RESET (trimmed) ====== */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0
+    }
+
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;
+      line-height: 1.5;
+      color: #0f172a;
+      background: #f8fafc
+    }
+
+    /* ====== THEME ====== */
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #475569;
+      --accent: #2563eb;
+      --accent-2: #0ea5e9;
+      --ring: #93c5fd;
+      --ok: #16a34a;
+      --warn: #eab308;
+      --danger: #ef4444;
+      --shadow: 0 10px 20px rgba(2, 6, 23, .08);
+      --radius: 16px
+    }
+
+    .dark {
+      --bg: #0b1020;
+      --card: #0f172a;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --accent: #60a5fa;
+      --accent-2: #22d3ee;
+      --ring: #1d4ed8;
+      --shadow: 0 10px 20px rgba(0, 0, 0, .35)
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text)
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none
+    }
+
+    a:hover {
+      opacity: .9
+    }
+
+    /* ====== LAYOUT ====== */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: linear-gradient(180deg, rgba(248, 250, 252, .9), rgba(248, 250, 252, .75));
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(2, 6, 23, .06)
+    }
+
+    .dark header {
+      background: linear-gradient(180deg, rgba(15, 23, 42, .9), rgba(15, 23, 42, .75));
+      border-color: rgba(255, 255, 255, .08)
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 16px
+    }
+
+    .brand {
+      display: flex;
+      gap: 12px;
+      align-items: center
+    }
+
+    .logo {
+      height: 36px;
+      width: 36px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: var(--shadow)
+    }
+
+    nav {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap
+    }
+
+    nav a {
+      padding: 10px 12px;
+      border-radius: 12px;
+      color: var(--muted)
+    }
+
+    nav a.active,
+    nav a:hover {
+      color: var(--text);
+      background: rgba(37, 99, 235, .08)
+    }
+
+    .dark nav a.active,
+    .dark nav a:hover {
+      background: rgba(96, 165, 250, .12)
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      margin-left: auto;
+      align-items: center
+    }
+
+    .btn {
+      border: 1px solid rgba(2, 6, 23, .08);
+      padding: 9px 12px;
+      border-radius: 12px;
+      background: var(--card);
+      color: var(--text);
+      cursor: pointer;
+      box-shadow: var(--shadow)
+    }
+
+    .btn:focus {
+      outline: 2px solid var(--ring);
+      outline-offset: 2px
+    }
+
+    .btn.primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      border: none;
+      color: #fff
+    }
+
+    .btn.ghost {
+      background: transparent;
+      border-color: rgba(2, 6, 23, .1)
+    }
+
+    input[type="search"],
+    select {
+      border: 1px solid rgba(2, 6, 23, .08);
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: var(--card);
+      color: var(--text);
+      box-shadow: var(--shadow)
+    }
+
+    main {
+      padding: 26px 0
+    }
+
+    .grid {
+      display: grid;
+      gap: 18px
+    }
+
+    @media(min-width:768px) {
+      .grid.cols-3 {
+        grid-template-columns: repeat(3, 1fr)
+      }
+
+      .grid.cols-2 {
+        grid-template-columns: repeat(2, 1fr)
+      }
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(2, 6, 23, .06);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow)
+    }
+
+    .card h3 {
+      margin: 0 0 8px
+    }
+
+    .badge {
+      font-size: 12px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(37, 99, 235, .1);
+      color: var(--accent)
+    }
+
+    .section {
+      margin: 26px 0
+    }
+
+    .section h2 {
+      margin: 0 0 10px
+    }
+
+    .muted {
+      color: var(--muted)
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(2, 6, 23, .06)
+    }
+
+    details {
+      border: 1px solid rgba(2, 6, 23, .08);
+      padding: 12px;
+      border-radius: 12px;
+      background: var(--card)
+    }
+
+    details+details {
+      margin-top: 10px
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: 600
+    }
+
+    .footer {
+      padding: 30px 0;
+      color: var(--muted)
+    }
+
+    .hidden {
+      display: none !important
+    }
+
+    .flex {
+      display: flex;
+      gap: 10px;
+      align-items: center
+    }
+
+    .right {
+      margin-left: auto
+    }
+
+    /* Modal */
+    .modal {
+      position: fixed;
+      inset: 0;
+      display: none;
+      place-items: center;
+      background: rgba(2, 6, 23, .5);
+      z-index: 100
+    }
+
+    .modal.open {
+      display: grid
+    }
+
+    .modal .dialog {
+      background: var(--card);
+      padding: 20px;
+      border-radius: 16px;
+      max-width: 720px;
+      width: min(95vw, 720px);
+      box-shadow: var(--shadow)
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 8px
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: 10px 12px
+    }
+
+    tbody tr {
+      background: var(--card);
+      box-shadow: var(--shadow)
+    }
+
+    tbody tr td:first-child,
+    thead tr th:first-child {
+      border-top-left-radius: 12px;
+      border-bottom-left-radius: 12px
+    }
+
+    tbody tr td:last-child,
+    thead tr th:last-child {
+      border-top-right-radius: 12px;
+      border-bottom-right-radius: 12px
+    }
+
+    /* Forms */
+    .chip {
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px dashed rgba(2, 6, 23, .15);
+      display: inline-block
+    }
+
+    .progress {
+      height: 10px;
+      background: rgba(2, 6, 23, .08);
+      border-radius: 999px;
+      overflow: hidden
+    }
+
+    .progress>span {
+      display: block;
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2))
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ====== Header / Nav ====== -->
+  <header>
+    <div class="container flex" role="navigation" aria-label="Primary">
+      <div class="brand" onclick="goto('home')" style="cursor:pointer" title="EduPath Home">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <strong>EduPath</strong>
+          <div class="muted" style="font-size:12px">Your guide to degrees • jobs • skills</div>
+        </div>
+      </div>
+      <nav class="right" id="nav"></nav>
+      <div class="toolbar">
+        <input id="q" type="search" placeholder="Search degrees, jobs, skills… (⌘/Ctrl+K)" aria-label="Search" />
+        <button class="btn ghost" id="themeToggle" aria-pressed="false" title="Toggle theme">🌙</button>
+        <button class="btn" onclick="openModal('bookmarkModal')">Bookmarks</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Sections render here -->
+    <section id="home" class="section"></section>
+    <section id="degrees" class="section hidden"></section>
+    <section id="process" class="section hidden"></section>
+    <section id="jobs" class="section hidden"></section>
+    <section id="skills" class="section hidden"></section>
+    <section id="colleges" class="section hidden"></section>
+    <section id="timeline" class="section hidden"></section>
+    <section id="quiz" class="section hidden"></section>
+    <section id="resources" class="section hidden"></section>
+    <section id="about" class="section hidden"></section>
+  </main>
+
+  <!-- ====== Modal: Bookmarks ====== -->
+  <div class="modal" id="bookmarkModal" role="dialog" aria-modal="true" aria-labelledby="bmTitle">
+    <div class="dialog">
+      <div class="flex">
+        <h3 id="bmTitle" style="margin:0">Your Bookmarks</h3>
+        <button class="btn right ghost" onclick="closeModal('bookmarkModal')">Close</button>
+      </div>
+      <div id="bookmarkList" style="margin-top:10px" class="grid cols-2"></div>
+    </div>
+  </div>
+
+  <footer class="footer container">
+    <div class="grid cols-2">
+      <div>
+        <strong>EduPath</strong>
+        <div class="muted">Open, offline-friendly, and student-first.</div>
+      </div>
+      <div class="right muted">Built with HTML • CSS • JS | © <span id="year"></span></div>
+    </div>
+  </footer>
+
+  <script>
+    /* ============================
+       Data (sample, extendable)
+    ============================ */
+    const DATA = {
+      streams: ["Arts", "Science", "Commerce", "Vocational"],
+      degrees: [
+        { id: "ba", name: "B.A. – Bachelor of Arts", stream: "Arts", duration: "3 years", overview: "Foundational humanities program with majors like History, Political Science, Psychology, Languages, Economics.", careers: ["UPSC/State PSC", "Teaching", "Social Sector", "Journalism"], skills: ["Writing", "Critical Thinking", "Research"], exams: ["UPSC", "SSC CGL", "NET (PG)"], tags: ["humanities", "foundation"] },
+        { id: "bsc", name: "B.Sc. – Bachelor of Science", stream: "Science", duration: "3 years", overview: "Core sciences: Physics, Chemistry, Mathematics, Biology, Computer Science.", careers: ["Research Assistant", "Data Analyst", "Lab Technician", "Higher Studies (M.Sc.)"], skills: ["Quantitative", "Lab Skills", "Programming"], exams: ["GATE (PG)", "CSIR-NET (PG)"], tags: ["science", "lab"] },
+        { id: "bcom", name: "B.Com. – Bachelor of Commerce", stream: "Commerce", duration: "3 years", overview: "Accounting, Finance, Taxation, Business Law, Auditing.", careers: ["Accountant", "Banking Associate", "Tax Consultant", "Audit Assistant"], skills: ["Excel", "Tally", "Business Communication"], exams: ["CA/CS/CMA (parallel)", "Bank PO"], tags: ["finance", "business"] },
+        { id: "bba", name: "BBA – Bachelor of Business Administration", stream: "Commerce", duration: "3 years", overview: "Management fundamentals: Marketing, HR, Operations, Entrepreneurship.", careers: ["Management Trainee", "Sales & Marketing", "HR Associate", "Entrepreneur"], skills: ["Presentation", "Analytics", "Teamwork"], exams: ["MBA Entrances (CAT/XAT/CMAT)"], tags: ["management", "business"] },
+        { id: "bvoc", name: "B.Voc. – Bachelor of Vocation", stream: "Vocational", duration: "3 years (exit options)", overview: "Skill-based degree with industry-aligned trades (Retail, Tourism, IT, Healthcare).", careers: ["Supervisor", "Technician", "Self-Employment"], skills: ["Practical Skills", "Customer Service"], exams: ["Sector SSC"], tags: ["skills", "industry"] }
+      ],
+      process: [
+        { stage: "Explore", steps: ["Identify interests & strengths", "Talk to teachers/mentors", "Use aptitude quiz"], tip: "Don’t chase trends—align with your curiosity." },
+        { stage: "Shortlist", steps: ["Pick 1–2 streams", "Compare degree outcomes", "Check eligibility & language of instruction"], tip: "Use our filters and bookmarks." },
+        { stage: "Apply", steps: ["Track dates", "Collect documents", "Apply online/offline to govt. colleges"], tip: "Keep scanned copies ready." },
+        { stage: "Join & Grow", steps: ["Attend orientation", "Join clubs & internships", "Build skills parallelly"], tip: "Consistency beats intensity." }
+      ],
+      jobs: [
+        { title: "Banking Associate", stream: "Commerce", path: "B.Com → Prep → Bank Exams (PO/Clerk)", skills: ["Quant", "Reasoning", "Excel"], type: "Government/Private" },
+        { title: "Data Analyst", stream: "Science", path: "B.Sc (CS/Math/Stats) → SQL + Python → Internship", skills: ["SQL", "Python", "Visualization"], type: "Private" },
+        { title: "Teacher", stream: "Arts/Science/Commerce", path: "Bachelor’s → B.Ed → TET/CTET", skills: ["Pedagogy", "Subject Mastery"], type: "Government/Private" },
+        { title: "Entrepreneur", stream: "Any", path: "Degree → Incubator/Loans → MVP → Market", skills: ["Marketing", "Finance Basics", "Resilience"], type: "Self-Employment" }
+      ],
+      skills: [
+        { name: "Digital Literacy", items: ["Email & Docs", "Spreadsheets", "Online Safety"] },
+        { name: "Programming Basics", items: ["HTML/CSS/JS", "Python", "Version Control"] },
+        { name: "Communication", items: ["Writing", "Presentation", "Interview Skills"] },
+        { name: "Finance Basics", items: ["Budgeting", "Tax Basics", "Banking"] }
+      ],
+      colleges: [
+        { name: "Govt. Degree College, City A", streams: ["Arts", "Science", "Commerce"], medium: "English/Hindi", facilities: ["Library", "Lab", "Hostel"], cutoff: "Open Merit", lat: 0, lon: 0 },
+        { name: "Govt. Women’s College, City B", streams: ["Arts", "Commerce"], medium: "English/Marathi", facilities: ["Library", "Internet"], cutoff: "As per Board", lat: 0, lon: 0 }
+      ],
+      timeline: [
+        { title: "Admissions Open", date: "2025-05-20", desc: "Applications start for Govt. colleges" },
+        { title: "Scholarship Window", date: "2025-06-10", desc: "Apply for state scholarships" },
+        { title: "Counselling Round 1", date: "2025-07-05", desc: "Seat allocation begins" }
+      ],
+      resources: [
+        { title: "SWAYAM (Free Courses)", url: "https://swayam.gov.in" },
+        { title: "NPTEL", url: "https://nptel.ac.in" },
+        { title: "National Scholarship Portal", url: "https://scholarships.gov.in" }
+      ]
+    }
+
+    /* ============================
+       Router / Navigation
+    ============================ */
+    const SECTIONS = [
+      { id: "home", label: "Home", icon: "🏠" },
+      { id: "degrees", label: "Degrees", icon: "🎓" },
+      { id: "process", label: "Process", icon: "🧭" },
+      { id: "jobs", label: "Jobs & Exams", icon: "💼" },
+      { id: "skills", label: "Skills", icon: "🧰" },
+      { id: "colleges", label: "Colleges", icon: "🏫" },
+      { id: "timeline", label: "Timeline", icon: "⏰" },
+      { id: "quiz", label: "Aptitude Quiz", icon: "📝" },
+      { id: "resources", label: "Resources", icon: "🔗" },
+      { id: "about", label: "About", icon: "ℹ️" }
+    ]
+
+    const nav = document.getElementById('nav')
+    nav.innerHTML = SECTIONS.map(s => `
+      <a href="#${s.id}" data-id="${s.id}" onclick="goto('${s.id}')">${s.icon} ${s.label}</a>
+    `).join("")
+
+    function goto(id) {
+      document.querySelectorAll('main .section').forEach(sec => sec.classList.add('hidden'))
+      const el = document.getElementById(id); el.classList.remove('hidden')
+      document.querySelectorAll('nav a').forEach(a => a.classList.toggle('active', a.dataset.id === id))
+      history.replaceState(null, '', `#${id}`)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+
+    /* ============================
+       Renderers
+    ============================ */
+    function renderHome() {
+      const el = document.getElementById('home')
+      el.innerHTML = `
+        <div class="card">
+          <h2>Welcome to EduPath</h2>
+          <p class="muted">A free, student-friendly guide to <strong>degrees</strong>, <strong>applications</strong>, <strong>jobs</strong>, and <strong>skills</strong>. Start with a stream, take a short quiz, or browse resources. Bookmark anything you like for quick access later.</p>
+          <div class="grid cols-3" style="margin-top:12px">
+            ${DATA.streams.map(s => `<div class='card'><div class='flex'><span class='badge'>Stream</span><span class='right pill'>${s}</span></div><h3 style='margin:.5rem 0'>${s}</h3><button class='btn primary' onclick="filterDegrees('${s}')">Explore ${s}</button></div>`).join('')}
+          </div>
+        </div>
+        <div class="grid cols-3 section">
+          <div class="card"><h3>🎓 Degrees</h3><p class="muted">Compare popular degrees, duration, outcomes, and required skills.</p><button class="btn" onclick="goto('degrees')">Browse Degrees</button></div>
+          <div class="card"><h3>🧭 Process</h3><p class="muted">Step-by-step from explore to enroll. Tips included.</p><button class="btn" onclick="goto('process')">View Process</button></div>
+          <div class="card"><h3>📝 Quiz</h3><p class="muted">5 quick questions to discover fit and interests.</p><button class="btn" onclick="goto('quiz')">Start Quiz</button></div>
+        </div>
+      `
+    }
+
+    function renderDegrees(filterStream) {
+      const el = document.getElementById('degrees')
+      const items = DATA.degrees.filter(d => !filterStream || d.stream === filterStream)
+      el.innerHTML = `
+        <div class="flex">
+          <h2>Degrees</h2>
+          <div class="right flex">
+            <select id="degreeStream" onchange="renderDegrees(this.value)">
+              <option value="">All Streams</option>
+              ${DATA.streams.map(s => `<option ${s === filterStream ? 'selected' : ''}>${s}</option>`).join('')}
+            </select>
+            <button class="btn ghost" onclick="exportJSON('degrees', ${JSON.stringify(JSON.stringify(DATA.degrees)).replace(/"/g, '&quot;')})">Export JSON</button>
+          </div>
+        </div>
+        <div class="grid cols-2" style="margin-top:10px">
+          ${items.map(d => degreeCard(d)).join('')}
+        </div>
+      `
+    }
+
+    function degreeCard(d) {
+      return `
+        <article class="card" id="deg-${d.id}">
+          <div class="flex"><span class="badge">${d.stream}</span><span class="right chip">${d.duration}</span></div>
+          <h3>${d.name}</h3>
+          <p class="muted">${d.overview}</p>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin:6px 0">${d.tags.map(t => `<span class='pill'>#${t}</span>`).join('')}</div>
+          <details><summary>Careers</summary><div>${list(d.careers)}</div></details>
+          <details><summary>Skills You'll Build</summary><div>${list(d.skills)}</div></details>
+          <details><summary>Popular Exams</summary><div>${list(d.exams)}</div></details>
+          <div class="flex" style="margin-top:8px">
+            <button class="btn" onclick="bookmark('${d.id}','degree')">Bookmark</button>
+            <button class="btn ghost right" onclick="shareLink('deg-${d.id}')">Share</button>
+          </div>
+        </article>`
+    }
+
+    function renderProcess() {
+      const el = document.getElementById('process')
+      el.innerHTML = `
+        <div class="flex"><h2>Application Process</h2><div class="right pill">4 stages</div></div>
+        <div class="grid cols-2" style="margin-top:12px">
+          ${DATA.process.map(p => `
+            <div class='card'>
+              <h3>${p.stage}</h3>
+              <ul>${p.steps.map(s => `<li>${s}</li>`).join('')}</ul>
+              <div class='chip'>Tip: ${p.tip}</div>
+            </div>`).join('')}
+        </div>
+        <div class="card" style="margin-top:12px">
+          <h3>Required Documents (common)</h3>
+          <div class="grid cols-3">
+            ${['10th/12th Marksheet', 'Transfer Certificate', 'Caste/Income Certificate', 'Photo ID', 'Passport Photos', 'Domicile (if reqd.)'].map(i => `<div class='pill'>${i}</div>`).join('')}
+          </div>
+        </div>
+      `
+    }
+
+    function renderJobs() {
+      const el = document.getElementById('jobs')
+      el.innerHTML = `
+        <div class="flex">
+          <h2>Jobs & Exams</h2>
+          <select class="right" id="jobStream" onchange="renderJobs()">
+            <option value="">All Streams</option>
+            ${DATA.streams.map(s => `<option>${s}</option>`).join('')}
+          </select>
+        </div>
+        <div class="grid cols-2" style="margin-top:10px">
+          ${DATA.jobs.filter(j => {
+        const v = (document.getElementById('jobStream') || {}).value || '';
+        return !v || j.stream.includes(v);
+      }).map(j => `
+            <div class='card'>
+              <div class='flex'><span class='badge'>${j.stream}</span><span class='right pill'>${j.type}</span></div>
+              <h3>${j.title}</h3>
+              <div class='muted' style='margin:.25rem 0'>Path: ${j.path}</div>
+              <div>${j.skills.map(s => `<span class='pill'>${s}</span>`).join(' ')}</div>
+            </div>`).join('')}
+        </div>
+      `
+    }
+
+    function renderSkills() {
+      const el = document.getElementById('skills')
+      el.innerHTML = `
+        <div class="flex"><h2>Skills</h2><div class="right pill">Study + Projects</div></div>
+        ${DATA.skills.map(s => `<details open><summary>${s.name}</summary><div>${list(s.items)}</div></details>`).join('')}
+        <div class="card" style="margin-top:12px">
+          <h3>Project Ideas</h3>
+          <ul>
+            <li>Create a personal portfolio website (HTML/CSS/JS)</li>
+            <li>Analyze a public dataset and share 3 insights</li>
+            <li>Volunteer with a local NGO and document learnings</li>
+          </ul>
+        </div>
+      `
+    }
+
+    function renderColleges() {
+      const el = document.getElementById('colleges')
+      el.innerHTML = `
+        <div class="flex">
+          <h2>Nearby Government Colleges</h2>
+          <button class="btn right" onclick="detectLocation()">Use My Location</button>
+        </div>
+        <table aria-label="Colleges">
+          <thead><tr><th>Name</th><th>Streams</th><th>Medium</th><th>Facilities</th><th>Cut-off</th><th></th></tr></thead>
+          <tbody>
+            ${DATA.colleges.map(c => `
+              <tr>
+                <td>${c.name}</td>
+                <td>${c.streams.join(', ')}</td>
+                <td>${c.medium}</td>
+                <td>${c.facilities.join(', ')}</td>
+                <td>${c.cutoff}</td>
+                <td><button class='btn' onclick="bookmark('${c.name}','college')">Bookmark</button></td>
+              </tr>`).join('')}
+          </tbody>
+        </table>
+        <div class="muted" style="margin-top:8px">Tip: Replace sample data with your district/state college feed or API.</div>
+      `
+    }
+
+    function renderTimeline() {
+      const el = document.getElementById('timeline')
+      const today = new Date()
+      el.innerHTML = `
+        <div class="flex"><h2>Important Dates</h2><div class="right pill">Today: ${today.toISOString().slice(0, 10)}</div></div>
+        <div class="grid cols-2" style="margin-top:10px">
+          ${DATA.timeline.map(t => `
+            <div class='card'>
+              <div class='flex'><span class='badge'>${new Date(t.date).toDateString()}</span><span class='right chip'>Reminder</span></div>
+              <h3>${t.title}</h3>
+              <p class='muted'>${t.desc}</p>
+              <div class='progress'><span style='width:${progressTo(t.date)}%'></span></div>
+            </div>`).join('')}
+        </div>
+      `
+    }
+
+    function renderQuiz() {
+      const el = document.getElementById('quiz')
+      const questions = [
+        { q: "Which activity do you enjoy most?", a: ["Solving science problems", "Writing stories", "Managing a small event", "Repairing/creating things"] },
+        { q: "Pick a class you look forward to:", a: ["Math/CS", "Language/History", "Business Studies", "Vocational/Workshop"] },
+        { q: "Comfort with numbers?", a: ["High", "Medium", "Low", "Only basic"] },
+        { q: "Preferred work style:", a: ["Lab/Research", "Content/Design", "Team leadership", "Hands-on field"] },
+        { q: "Goal after 3 years:", a: ["Higher studies", "Civil services/Teaching", "Corporate job", "Own setup"] }
+      ]
+      el.innerHTML = `
+        <div class="flex"><h2>Aptitude & Interest Quiz</h2><button class="btn right" onclick="evaluateQuiz()">Submit</button></div>
+        <form id="quizForm" class="grid cols-2" style="margin-top:10px">
+          ${questions.map((it, idx) => `<div class='card'><h3>Q${idx + 1}. ${it.q}</h3>${it.a.map((opt, i) => `<label style='display:block;margin:.35rem 0'><input type='radio' required name='q${idx}' value='${i}'/> ${opt}</label>`).join('')}</div>`).join('')}
+        </form>
+        <div id="quizResult" class="card hidden" style="margin-top:12px"></div>
+      `
+    }
+
+    function renderResources() {
+      const el = document.getElementById('resources')
+      el.innerHTML = `
+        <div class="flex"><h2>Open Resources</h2><button class="btn ghost right" onclick="exportJSON('resources', ${JSON.stringify(JSON.stringify(DATA.resources)).replace(/"/g, '&quot;')})">Export Links</button></div>
+        <ul>${DATA.resources.map(r => `<li><a href='${r.url}' target='_blank' rel='noopener'>${r.title}</a></li>`).join('')}</ul>
+        <div class="muted">More to add: state portals, scholarship lists, official prospectus PDFs.</div>
+      `
+    }
+
+    function renderAbout() {
+      const el = document.getElementById('about')
+      el.innerHTML = `
+        <div class="card">
+          <h2>About</h2>
+          <p>This is a starter, offline-friendly guidance portal. Extend the <code>DATA</code> object or connect to APIs. Perfect for pilots in districts to improve awareness about degrees, processes, jobs and skills.</p>
+          <ul>
+            <li>Single HTML file (easy hosting)</li>
+            <li>Accessible, responsive UI</li>
+            <li>LocalStorage for bookmarks</li>
+            <li>No external libraries</li>
+          </ul>
+        </div>
+      `
+    }
+
+    /* ============================
+       Helpers / Actions
+    ============================ */
+    const list = arr => `<ul>${arr.map(i => `<li>${i}</li>`).join('')}</ul>`
+
+    function filterDegrees(stream) {
+      goto('degrees');
+      renderDegrees(stream)
+    }
+
+    function progressTo(dateStr) {
+      const target = new Date(dateStr).getTime(); const now = Date.now();
+      const start = new Date(new Date().getFullYear(), 0, 1).getTime();
+      const pct = Math.min(100, Math.max(0, ((now - start) / (target - start)) * 100))
+      return isFinite(pct) ? pct : 0
+    }
+
+    // Bookmarks
+    const getBM = () => JSON.parse(localStorage.getItem('edupath_bm') || '[]')
+    const setBM = (arr) => localStorage.setItem('edupath_bm', JSON.stringify(arr))
+    function bookmark(id, type) {
+      const items = getBM();
+      if (!items.find(x => x.id === id && x.type === type)) items.push({ id, type, ts: Date.now() })
+      setBM(items); alert('Saved to bookmarks!')
+      refreshBookmarks()
+    }
+    function refreshBookmarks() {
+      const listEl = document.getElementById('bookmarkList'); if (!listEl) return
+      const items = getBM().sort((a, b) => b.ts - a.ts)
+      listEl.innerHTML = items.length ? items.map(b => {
+        let title = b.id
+        if (b.type === 'degree') title = DATA.degrees.find(d => d.id === b.id)?.name || b.id
+        let target = 'colleges'
+        if (b.type === 'degree') target = 'degrees'
+        if (b.type === 'college') target = 'colleges'
+        if (b.type === 'quiz') target = 'quiz'
+        return `<div class='card'><div class='muted'>${b.type.toUpperCase()}</div><h3 style='margin:.25rem 0'>${title}</h3><button class='btn' onclick="goto('${target}')">Open</button> <button class='btn ghost' onclick="removeBM('${b.id}','${b.type}')">Remove</button></div>`
+      }).join('') : '<div class="muted">No bookmarks yet.</div>'
+    }
+    function removeBM(id, type) { setBM(getBM().filter(x => !(x.id === id && x.type === type))); refreshBookmarks() }
+
+    // Modal controls
+    function openModal(id) { document.getElementById(id).classList.add('open'); refreshBookmarks() }
+    function closeModal(id) { document.getElementById(id).classList.remove('open') }
+
+    // Sharing
+    function shareLink(anchorId) {
+      const url = `${location.origin}${location.pathname}#degrees`;
+      navigator.clipboard.writeText(url).then(() => alert('Link copied! Open and search the degree name.'))
+    }
+
+    // Export JSON
+    function exportJSON(name, jsonStr) {
+      const blob = new Blob([jsonStr], { type: 'application/json' })
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `${name}.json`; a.click()
+    }
+
+    // Search (Ctrl/Cmd+K)
+    const searchInput = document.getElementById('q')
+    searchInput.addEventListener('input', e => performSearch(e.target.value))
+    window.addEventListener('keydown', e => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); searchInput.focus() } })
+
+    function performSearch(term) {
+      term = term.trim().toLowerCase(); if (!term) { document.querySelectorAll('[data-hit]').forEach(n => n.remove()); return }
+      // simple results modal-ish overlay
+      const results = []
+      DATA.degrees.forEach(d => { if (d.name.toLowerCase().includes(term) || d.stream.toLowerCase().includes(term) || (d.tags.join(' ').toLowerCase().includes(term))) results.push({ type: 'Degree', title: d.name, go: () => { goto('degrees'); document.getElementById(`deg-${d.id}`)?.scrollIntoView({ behavior: 'smooth' }) } }) })
+      DATA.jobs.forEach(j => { if (j.title.toLowerCase().includes(term) || j.stream.toLowerCase().includes(term)) results.push({ type: 'Job', title: j.title, go: () => goto('jobs') }) })
+      DATA.skills.forEach(s => { if (s.name.toLowerCase().includes(term)) results.push({ type: 'Skill', title: s.name, go: () => goto('skills') }) })
+
+      showHits(results)
+    }
+
+    function showHits(results) {
+      // remove old
+      document.getElementById('hits')?.remove()
+      const box = document.createElement('div'); box.id = 'hits'; box.setAttribute('data-hit', '1');
+      Object.assign(box.style, { position: 'fixed', top: '66px', right: '16px', width: 'min(520px,90vw)', maxHeight: '60vh', overflow: 'auto', background: 'var(--card)', border: '1px solid rgba(2,6,23,.1)', borderRadius: '12px', boxShadow: 'var(--shadow)', zIndex: 60 })
+      box.innerHTML = `<div style='padding:10px 12px;border-bottom:1px solid rgba(2,6,23,.06)'><strong>Search results</strong> <span class='muted'>(${results.length})</span></div>` +
+        (results.length ? results.map(r => `<div style='padding:10px 12px;cursor:pointer' onmouseover="this.style.background='rgba(37,99,235,.06)'" onmouseout="this.style.background='transparent'" onclick='(${r.go.toString()})()'><div class='muted' style='font-size:12px'>${r.type}</div><div>${r.title}</div></div>`).join('') : `<div style='padding:10px 12px' class='muted'>No matches</div>`)
+      document.body.appendChild(box)
+      // click outside to close
+      const closer = (e) => { if (!box.contains(e.target) && e.target !== searchInput) { box.remove(); document.removeEventListener('click', closer) } }
+      setTimeout(() => document.addEventListener('click', closer), 0)
+    }
+
+    // Quiz scoring (very simple mapping)
+    function evaluateQuiz() {
+      const form = document.getElementById('quizForm');
+      if (!form.checkValidity()) { alert('Please answer all questions.'); return }
+      const data = new FormData(form)
+      const picks = [...data.values()].map(v => Number(v))
+      const scores = { Arts: 0, Science: 0, Commerce: 0, Vocational: 0 }
+      picks.forEach((v, i) => {
+        if (i === 0) { [scores.Science, scores.Arts, scores.Commerce, scores.Vocational][v]++ }
+        if (i === 1) { [scores.Science, scores.Arts, scores.Commerce, scores.Vocational][v]++ }
+        if (i === 2) { [scores.Science, scores.Commerce, scores.Arts, scores.Vocational][v]++ }
+        if (i === 3) { [scores.Science, scores.Arts, scores.Commerce, scores.Vocational][v]++ }
+        if (i === 4) { [scores.Science, scores.Arts, scores.Commerce, scores.Vocational][v]++ }
+      })
+      const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1])
+      const top = sorted[0]
+      const result = document.getElementById('quizResult')
+      result.classList.remove('hidden')
+      result.innerHTML = `<h3>Suggested Stream: ${top[0]}</h3><p class='muted'>Based on your answers. Explore recommended degrees below.</p><div>${DATA.degrees.filter(d => d.stream === top[0]).map(d => `<span class='pill' style='margin:4px'>${d.name}</span>`).join('')}</div>`
+      bookmark(top[0], 'quiz')
+    }
+
+    // Location (placeholder)
+    function detectLocation() {
+      if (!navigator.geolocation) { alert('Geolocation not supported.'); return }
+      navigator.geolocation.getCurrentPosition(pos => {
+        alert(`Location captured. lat=${pos.coords.latitude.toFixed(3)}, lon=${pos.coords.longitude.toFixed(3)}. Replace DATA.colleges with API results filtered by distance.`)
+      }, err => alert('Could not get location: ' + err.message))
+    }
+
+    // Theme toggle
+    const themeBtn = document.getElementById('themeToggle')
+    const THEME_KEY = 'edupath_theme'
+    function applyTheme(mode) { document.documentElement.classList.toggle('dark', mode === 'dark'); themeBtn.textContent = mode === 'dark' ? '☀️' : '🌙'; themeBtn.setAttribute('aria-pressed', String(mode === 'dark')) }
+    function toggleTheme() { const mode = localStorage.getItem(THEME_KEY) === 'dark' ? 'light' : 'dark'; localStorage.setItem(THEME_KEY, mode); applyTheme(mode) }
+    themeBtn.addEventListener('click', toggleTheme)
+
+    // Init
+    function init() {
+      applyTheme(localStorage.getItem(THEME_KEY) || 'light')
+      renderHome(); renderDegrees(); renderProcess(); renderJobs(); renderSkills(); renderColleges(); renderTimeline(); renderQuiz(); renderResources(); renderAbout();
+      const hash = location.hash.replace('#', '');
+      goto(SECTIONS.find(s => s.id === hash)?.id || 'home')
+      document.getElementById('year').textContent = new Date().getFullYear()
+    }
+
+    init()
+  </script>
+</body>
+
+</html>
